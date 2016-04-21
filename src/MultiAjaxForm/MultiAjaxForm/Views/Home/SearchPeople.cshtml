@@ -1,0 +1,72 @@
+﻿@using MultiAjaxForm.Models
+@{
+    AjaxOptions searchOpt = new AjaxOptions
+    {
+        UpdateTargetId = "searchResult",
+        //Confirm = "Are you sure to start search?",
+        InsertionMode = InsertionMode.Replace,
+        LoadingElementId = "divSearchLoading"
+    };
+}
+
+<div id="searchResult">
+    @using (Ajax.BeginForm("SearchPeople", "Home", new { keyword = "" }, searchOpt))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+
+            <hr />
+            @{
+                var no = new Random().Next(0, 10000000);
+            }
+            <div>Random No: @no</div>
+
+            <br />
+
+            <table class='table table - striped'>
+                <thead>
+                    <tr>
+                        <th>Row&nbsp;</th>
+                        <th>AutoId&nbsp;</th>
+                        <th>Name&nbsp;</th>
+                        <th>City&nbsp;</th>
+                        <th>Address&nbsp;</th>
+                        <th>Active&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Employes != null)
+                    {
+                        var empList = (List<EmpModel>)ViewBag.Employes;
+                        for (var row = 0; row < empList.Count(); row++)
+                        {
+                            <tr>
+                                <th scope='row'>@(row + 1)</th>
+                                <td>@empList[row].AutoId</td>
+                                <td>@empList[row].Name</td>
+                                <td>@empList[row].City</td>
+                                <td>@empList[row].Address</td>
+                                <td>@empList[row].Active</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <hr />
+
+            <div>
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <div id="divSearchLoading" style="color: red; width: 200px; background-color: yellow; font-size: larger; display: none; position: absolute;">Loading ....</div>
+                        @Html.TextBox("keyword")
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="submit" value="Search" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+                }
+</div>

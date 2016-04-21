@@ -1,30 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using MultiAjaxForm.Models;
 
 namespace MultiAjaxForm.Controllers
 {
     public class HomeController : Controller
     {
+        // GET: Home
+        [HttpGet]
         public ActionResult Index()
         {
+            ViewBag.Employes = EmpModel.Employes;
             return View();
         }
 
-        public ActionResult About()
+        // GET: Home/EmployeeMaster
+        [HttpGet]
+        public ActionResult EmployeeMaster()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
+        // POST: Home/EmployeeMaster Submit
+        [HttpPost]
+        public async Task<ActionResult> EmployeeMaster(EmpModel obj)
         {
-            ViewBag.Message = "Your contact page.";
+            if (!ModelState.IsValid) return View();
 
-            return View();
+            await Task.Delay(2000);
+
+            EmpModel.Employes.Add(new EmpModel()
+            {
+                Name = obj.Name,
+                Address = obj.Address,
+                City = obj.City
+            });
+
+            ViewBag.Records = $"Successfully saved employee {obj.Name} from {obj.City}, {obj.Address}";
+            return PartialView("EmployeeMaster", obj);
+        }
+
+        // POST: Home/SearchPeople Submit
+        [HttpPost]
+        public async Task<ActionResult> SearchPeople(string keyword)
+        {
+            await Task.Delay(2000);
+
+            ViewBag.Employes = EmpModel.Employes.Where(f => f.Name.ToLower().Contains(keyword.ToLower())).ToList();
+
+            return PartialView("SearchPeople");
         }
     }
 }
