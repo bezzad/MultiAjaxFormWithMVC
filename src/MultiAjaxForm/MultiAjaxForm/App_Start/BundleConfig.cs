@@ -11,6 +11,9 @@ namespace MultiAjaxForm
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jquery_unobtrusive_ajax").Include(
+                        "~/Scripts/jquery.unobtrusive-ajax.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 

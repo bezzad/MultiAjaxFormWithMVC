@@ -10,7 +10,7 @@
 }
 
 <div id="searchResult">
-    @using (Ajax.BeginForm("SearchPeople", "Home", new { keyword = "" }, searchOpt))
+    @using (Ajax.BeginForm("SearchPeople", "Home", new { keyword = "" }, searchOpt, new { @class = "refreshable-form" }))
     {
         @Html.AntiForgeryToken()
 

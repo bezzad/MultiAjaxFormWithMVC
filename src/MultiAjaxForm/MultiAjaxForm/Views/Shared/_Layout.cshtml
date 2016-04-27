@@ -1,40 +1,83 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-</head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("www.xomorod.com", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
-                </ul>
+﻿@using MultiAjaxForm.Core
+
+@{
+    var bodyOpt = new AjaxOptions()
+    {
+        UpdateTargetId = "replacableBody",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "GET"
+    };
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jquery_unobtrusive_ajax")
+@Scripts.Render("~/bundles/bootstrap")
+
+<div id="replacableBody">
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewBag.Title</title>
+       
+
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("www.xomorod.com", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li><a style="color: #5cb85c">@Html.GetNewNo()</a></li>
+                        <li>@Ajax.ActionLink("Refresh From by Ajax", action, controller, bodyOpt)</li>
+                        <li><a href="#" onclick="updateFrom('@controller', '@action')" class="btnRefresh" id="btnRefresh">Refresh From by js</a></li>
+                        <li><a href="#" onclick="refreshAllForms();">Save and Search</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>
+        </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
+        <script>
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) { options.async = true; });
+
+            @*$(function () {
+                $("#btnRefresh").on("click", function (e) {
+                    $.get("@controller/@action").done(function (result) {
+                        $("#replacableBody").html(result);
+                    });
+                });
+            });*@
+
+            function updateFrom(controllerName, actionName) {
+                $.get(controllerName + "/" + actionName).done(function (result) {
+                    $("#replacableBody").html(result);
+                });
+            }
+
+            function refreshAllForms() {
+                $(".refreshable-form").submit();
+            }
+        </script>
+    </body>
 </html>
+</div>

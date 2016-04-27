@@ -14,7 +14,7 @@
 }
 
 <div id="divEmp">
-    @using (Ajax.BeginForm("EmployeeMaster", "Home", new { @model = Model }, options))
+    @using (Ajax.BeginForm("EmployeeMaster", "Home", new { @model = Model }, options, new { @class = "refreshable-form" }))
     {
         @Html.AntiForgeryToken()
 
